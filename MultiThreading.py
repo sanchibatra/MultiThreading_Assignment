@@ -4,8 +4,7 @@ import time
 import threading
 import pandas as pd
 
-# Function to perform matrix multiplication and measure time
-def multiply_matrices(constant_matrix, num_threads):
+def matrix_multiplication(constant_matrix, num_threads):
     results = []
     for _ in range(10):
         start_time = time.time()
@@ -21,23 +20,29 @@ def multiply_matrices(constant_matrix, num_threads):
         results.append(end_time - start_time)
     return np.mean(results)
 
-# Function to perform matrix multiplication for a batch of matrices
+
 def perform_multiplication(constant_matrix, results, start_idx, end_idx):
     for i in range(start_idx, end_idx):
         random_matrix = np.random.rand(1000, 1000)
         result = np.matmul(random_matrix, constant_matrix)
 
-# Create constant matrix
+
 constant_matrix = np.random.rand(1000, 1000)
 
-# Generate table for time taken with different number of threads
+
 thread_counts = list(range(1, 11))
 times = []
 for num_threads in thread_counts:
-    avg_time = multiply_matrices(constant_matrix, num_threads)
+    avg_time = matrix_multiplication(constant_matrix, num_threads)
     times.append(avg_time)
     print(f"Time taken with {num_threads} threads: {avg_time} seconds")
 
+
+data = {'Number of Threads': thread_counts, 'Average Time (seconds)': times}
+df = pd.DataFrame(data)
+
+
+df.to_csv('multithreading.csv', index=False)
 
 plt.plot(thread_counts, times)
 plt.xlabel('Number of Threads')
@@ -45,8 +50,5 @@ plt.ylabel('Average Time (seconds)')
 plt.title('Time Taken vs Number of Threads')
 plt.show()
 
-
-data = {'Number of Threads': thread_counts, 'Average Time (seconds)': times}
-df = pd.DataFrame(data)
-df.to_csv('thread_assignment.csv', index=False)
-
+# Display the DataFrame
+print(df)
